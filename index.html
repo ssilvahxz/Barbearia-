@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Barbearia premium - Estilo, sofisticação e tradição em cada corte.">
+  <title>Luigue Barbeiro</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✂</text></svg>">
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loading-overlay" class="loading-overlay">
+  <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo" onclick="navigate('home');return false">
+      <img id="logo-img" class="logo-img" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect width='44' height='44' rx='8' fill='%23c8a45c'/><text x='22' y='30' text-anchor='middle' font-size='24' fill='%230a0a0f'>✂</text></svg>" alt="Logo">
+      <div>
+        <div id="logo-text" class="logo-text">Luigue Barbeiro</div>
+        <div class="logo-text-sm">BARBEARIA</div>
+      </div>
+    </a>
+
+    <nav class="nav">
+      <a class="nav-link" data-page="home" onclick="navigate('home')">Início</a>
+      <a class="nav-link" data-page="booking" onclick="startBooking()">Agendar</a>
+      <a class="nav-link" data-page="my-appointments" onclick="navigate('my-appointments')">Meus Agendamentos</a>
+      <a class="nav-link" data-page="profile" onclick="navigate('profile')">Perfil</a>
+    </nav>
+
+    <div class="header-actions">
+      <a id="instagram-link" class="social-btn" href="https://www.instagram.com/luigue_barbeiro/" target="_blank" title="Instagram">📷</a>
+      <a id="whatsapp-link" class="social-btn" href="https://wa.me/5599981226993" target="_blank" title="WhatsApp">💬</a>
+      
+      <div id="auth-buttons" style="display:flex;gap:8px">
+        <button class="btn btn-secondary btn-sm" onclick="openAuthModal('login')">Entrar</button>
+        <button class="btn btn-primary btn-sm" onclick="openAuthModal('register')">Criar Conta</button>
+      </div>
+      
+      <div id="user-menu" style="display:none;align-items:center;gap:12px">
+        <span id="user-name" style="color:var(--gold);font-weight:600;font-size:0.9rem"></span>
+        <div style="position:relative">
+          <button class="btn btn-secondary btn-sm" onclick="document.getElementById('user-dropdown').classList.toggle('show')">☰</button>
+          <div id="user-dropdown" style="display:none;position:absolute;right:0;top:40px;background:var(--dark-2);border:1px solid rgba(200,164,92,0.2);border-radius:12px;padding:8px;min-width:180px;z-index:100">
+            <a id="admin-link" class="sidebar-item" style="display:none" onclick="navigate('admin');document.getElementById('user-dropdown').classList.remove('show')">⚙️ Painel ADM</a>
+            <a class="sidebar-item" onclick="navigate('profile');document.getElementById('user-dropdown').classList.remove('show')">👤 Perfil</a>
+            <a class="sidebar-item" onclick="navigate('my-appointments');document.getElementById('user-dropdown').classList.remove('show')">📅 Agendamentos</a>
+            <a class="sidebar-item" onclick="handleLogout();document.getElementById('user-dropdown').classList.remove('show')" style="color:var(--red)">🚪 Sair</a>
+          </div>
+        </div>
+      </div>
+      
+      <button class="menu-toggle" onclick="document.getElementById('mobile-menu').classList.add('open')">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="mobile-menu">
+  <button class="mobile-menu-close" onclick="this.parentElement.classList.remove('open')">✕</button>
+  <a class="nav-link" onclick="navigate('home');document.getElementById('mobile-menu').classList.remove('open')">Início</a>
+  <a class="nav-link" onclick="startBooking();document.getElementById('mobile-menu').classList.remove('open')">Agendar</a>
+  <a class="nav-link" onclick="navigate('my-appointments');document.getElementById('mobile-menu').classList.remove('open')">Meus Agendamentos</a>
+  <a class="nav-link" onclick="navigate('profile');document.getElementById('mobile-menu').classList.remove('open')">Perfil</a>
+  <button class="btn btn-primary btn-lg" onclick="startBooking();document.getElementById('mobile-menu').classList.remove('open')" style="margin-top:16px">Agendar Agora</button>
+  <div style="margin-top:24px;display:flex;gap:16px">
+    <a class="social-btn" href="https://wa.me/5599981226993" target="_blank">💬</a>
+    <a class="social-btn" href="https://www.instagram.com/luigue_barbeiro/" target="_blank">📷</a>
+  </div>
+  <div id="mobile-auth" style="margin-top:16px">
+    <button class="btn btn-secondary" onclick="openAuthModal('login');document.getElementById('mobile-menu').classList.remove('open')">Entrar</button>
+  </div>
+</div>
+
+<!-- ==================== PAGES ==================== -->
+
+<!-- HOME -->
+<section id="page-home" class="page-section">
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-pattern"></div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div id="hero-eyebrow" class="hero-eyebrow">L UIGUE BARBEIRO</div>
+        <h1 id="hero-title" class="hero-title">Estilo & Tradição</h1>
+        <p id="hero-desc" class="hero-desc">Barbearia premium com atendimento de excelência. Estilo, sofisticação e tradição em cada corte.</p>
+        <div class="hero-buttons">
+          <button class="btn btn-primary btn-lg" onclick="startBooking()">Agendar Agora</button>
+          <a class="btn btn-secondary btn-lg" href="#services-section">Nossos Serviços</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-circle"></div>
+        <div class="hero-circle"></div>
+        <div class="hero-circle"></div>
+        <div class="hero-scissors">✂</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About -->
+  <section class="section">
+    <h2 class="section-title">Sobre Nós</h2>
+    <p class="section-subtitle">Tradição & Excelência</p>
+    <div class="about-grid">
+      <div class="about-image">
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,var(--dark-3),var(--dark-5));display:flex;align-items:center;justify-content:center;font-size:4rem;color:var(--gold)">✂</div>
+      </div>
+      <div class="about-text">
+        <h3>Uma Experiência Única</h3>
+        <p id="about-text">Na nossa barbearia, cada atendimento é uma experiência cuidadosamente elaborada. Combinamos técnicas tradicionais com a modernidade para oferecer cortes impecáveis e um ambiente acolhedor.</p>
+        <p>Nosso compromisso é com a excelência. Cada detalhe foi pensado para que você se sinta especial, desde o café fresquinho até o acabamento perfeito do seu corte.</p>
+        <button class="btn btn-primary" onclick="startBooking()">Agendar Agora</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services-section" class="section-dark">
+    <div class="section-inner">
+      <h2 class="section-title">Nossos Serviços</h2>
+      <p class="section-subtitle">Qualidade Premium</p>
+      <div id="home-services-grid" class="services-grid"></div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="section">
+    <h2 class="section-title">Galeria</h2>
+    <p class="section-subtitle">Nosso Trabalho</p>
+    <div id="gallery-grid" class="gallery-grid"></div>
+  </section>
+
+  <!-- Reviews -->
+  <section class="section-dark">
+    <div class="section-inner">
+      <h2 class="section-title">Avaliações</h2>
+      <p class="section-subtitle">O Que Dizem Nossos Clientes</p>
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div id="reviews-avg" class="stat-value">5.0</div>
+          <div class="stat-label">Nota Média</div>
+        </div>
+        <div class="stat-item">
+          <div id="reviews-stars" class="stat-value">★★★★★</div>
+          <div class="stat-label">Avaliação</div>
+        </div>
+        <div class="stat-item">
+          <div id="reviews-total" class="stat-value">0</div>
+          <div class="stat-label">Avaliações</div>
+        </div>
+      </div>
+      <div id="reviews-grid" class="reviews-grid"></div>
+    </div>
+  </section>
+
+  <!-- Hours -->
+  <section class="section">
+    <h2 class="section-title">Horário de Funcionamento</h2>
+    <p class="section-subtitle">Estamos Prontos Para Você</p>
+    <div id="hours-grid" class="hours-grid"></div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section-dark">
+    <div class="section-inner">
+      <h2 class="section-title">Contato</h2>
+      <p class="section-subtitle">Fale Conosco</p>
+      <div class="contact-grid">
+        <a id="whatsapp-link" class="contact-card" href="https://wa.me/5599981226993" target="_blank">
+          <div class="contact-icon">💬</div>
+          <div class="contact-label">WhatsApp</div>
+          <div id="whatsapp-number" class="contact-value">(99) 98122-6993</div>
+        </a>
+        <a id="instagram-link" class="contact-card" href="https://www.instagram.com/luigue_barbeiro/" target="_blank">
+          <div class="contact-icon">📷</div>
+          <div class="contact-label">Instagram</div>
+          <div class="contact-value">@luigue_barbeiro</div>
+        </a>
+      </div>
+      <div id="address-section" class="contact-grid" style="display:none;margin-top:24px">
+        <div class="contact-card">
+          <div class="contact-icon">📍</div>
+          <div class="contact-label">Endereço</div>
+          <div id="address-text" class="contact-value"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo" style="margin-bottom:16px">
+          <span class="logo-text" id="footer-brand-name">Luigue Barbeiro</span>
+        </div>
+        <p id="footer-desc" class="footer-desc">Barbearia premium com atendimento de excelência.</p>
+        <div class="footer-social">
+          <a class="social-btn" href="https://wa.me/5599981226993" target="_blank">💬</a>
+          <a class="social-btn" href="https://www.instagram.com/luigue_barbeiro/" target="_blank">📷</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-heading">Links</h4>
+        <ul class="footer-links">
+          <li><a href="#" onclick="navigate('home')">Início</a></li>
+          <li><a href="#" onclick="startBooking()">Agendar</a></li>
+          <li><a href="#" onclick="navigate('my-appointments')">Agendamentos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-heading">Contato</h4>
+        <ul class="footer-links">
+          <li><a href="https://wa.me/5599981226993" target="_blank">WhatsApp</a></li>
+          <li><a href="https://www.instagram.com/luigue_barbeiro/" target="_blank">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 <span id="footer-brand-name-2">Luigue Barbeiro</span>. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+</section>
+
+<!-- BOOKING PAGE -->
+<section id="page-booking" class="page-section" style="display:none">
+  <div class="page">
+    <div class="page-inner">
+      <h2 class="section-title" style="margin-bottom:12px">Agendar Horário</h2>
+      <p class="section-subtitle">Escolha seu serviço, data e horário</p>
+      
+      <div class="booking-steps">
+        <div class="step active"><div class="step-num">1</div><div class="step-label">Serviço</div></div>
+        <div class="step-connector"></div>
+        <div class="step"><div class="step-num">2</div><div class="step-label">Data</div></div>
+        <div class="step-connector"></div>
+        <div class="step"><div class="step-num">3</div><div class="step-label">Horário</div></div>
+        <div class="step-connector"></div>
+        <div class="step"><div class="step-num">4</div><div class="step-label">Confirmar</div></div>
+      </div>
+
+      <div id="booking-step-1" class="booking-panel active">
+        <h3 style="margin-bottom:16px;font-family:var(--font-display)">Selecione o Serviço</h3>
+        <div id="service-select-grid" class="service-select-grid"></div>
+        <div style="margin-top:20px;display:flex;justify-content:flex-end">
+          <button class="btn btn-primary" onclick="nextStep()">Próximo →</button>
+        </div>
+      </div>
+
+      <div id="booking-step-2" class="booking-panel">
+        <h3 style="margin-bottom:16px;font-family:var(--font-display)">Escolha a Data</h3>
+        <div class="calendar">
+          <div class="calendar-header">
+            <button class="calendar-nav" onclick="prevMonth()">←</button>
+            <div id="calendar-title" class="calendar-title"></div>
+            <button class="calendar-nav" onclick="nextMonth()">→</button>
+          </div>
+          <div id="calendar-container" class="calendar-days"></div>
+        </div>
+      </div>
+
+      <div id="booking-step-3" class="booking-panel">
+        <h3 style="margin-bottom:16px;font-family:var(--font-display)">Escolha o Horário</h3>
+        <div id="time-slots-container"></div>
+        <div style="margin-top:20px;display:flex;gap:12px">
+          <button class="btn btn-secondary" onclick="prevStep()">← Voltar</button>
+        </div>
+      </div>
+
+      <div id="booking-step-4" class="booking-panel"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MY APPOINTMENTS -->
+<section id="page-my-appointments" class="page-section" style="display:none">
+  <div class="page">
+    <div class="page-inner">
+      <h2 class="section-title" style="margin-bottom:12px">Meus Agendamentos</h2>
+      <p class="section-subtitle">Acompanhe seus horários</p>
+      <div id="my-appointments-list"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE -->
+<section id="page-profile" class="page-section" style="display:none">
+  <div class="page">
+    <div class="page-inner">
+      <h2 class="section-title" style="margin-bottom:12px">Meu Perfil</h2>
+      <p class="section-subtitle">Gerencie suas informações</p>
+      
+      <div class="profile-card">
+        <div class="form-group">
+          <label class="form-label">Nome</label>
+          <input id="profile-name" class="form-input" type="text">
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input id="profile-email" class="form-input" type="email" disabled style="opacity:0.6">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Telefone / WhatsApp</label>
+          <input id="profile-phone" class="form-input" type="tel">
+        </div>
+        <button class="btn btn-primary" onclick="saveProfile()">Salvar Perfil</button>
+      </div>
+
+      <div class="profile-card" style="margin-top:30px">
+        <h3 style="font-family:var(--font-display);margin-bottom:20px">Alterar Senha</h3>
+        <div class="form-group">
+          <label class="form-label">Senha Atual</label>
+          <input id="current-password" class="form-input" type="password">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nova Senha</label>
+          <input id="new-password" class="form-input" type="password">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmar Nova Senha</label>
+          <input id="confirm-new-password" class="form-input" type="password">
+        </div>
+        <button class="btn btn-primary" onclick="changePassword()">Alterar Senha</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ADMIN -->
+<section id="page-admin" class="page-section" style="display:none">
+  <div class="admin-layout">
+    <button class="admin-sidebar-toggle" onclick="document.querySelector('.admin-sidebar').classList.toggle('open')">☰</button>
+    
+    <aside class="admin-sidebar">
+      <div class="sidebar-section">Principal</div>
+      <a class="sidebar-item active" data-panel="dashboard" onclick="navigateAdmin('dashboard')">📊 Dashboard</a>
+      <a class="sidebar-item" data-panel="appointments" onclick="navigateAdmin('appointments')">📅 Agendamentos</a>
+      <a class="sidebar-item" data-panel="clients" onclick="navigateAdmin('clients')">👥 Clientes</a>
+      <div class="sidebar-section">Conteúdo</div>
+      <a class="sidebar-item" data-panel="services" onclick="navigateAdmin('services')">✂ Serviços</a>
+      <a class="sidebar-item" data-panel="gallery" onclick="navigateAdmin('gallery')">🖼 Galeria</a>
+      <a class="sidebar-item" data-panel="reviews" onclick="navigateAdmin('reviews')">⭐ Avaliações</a>
+      <div class="sidebar-section">Configurações</div>
+      <a class="sidebar-item" data-panel="hours" onclick="navigateAdmin('hours')">🕐 Horários</a>
+      <a class="sidebar-item" data-panel="settings" onclick="navigateAdmin('settings')">⚙ Configurações</a>
+      <div style="padding:16px 24px">
+        <button class="btn btn-secondary btn-sm" onclick="navigate('home')" style="width:100%">← Voltar ao Site</button>
+      </div>
+    </aside>
+    
+    <main class="admin-content">
+      <!-- Dashboard -->
+      <div id="admin-dashboard" class="admin-panel active">
+        <h2 class="admin-panel-title">Dashboard</h2>
+        <div class="dash-stats">
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon">📅</div>
+            <div id="dash-today-count" class="dash-stat-value">0</div>
+            <div class="dash-stat-label">Agendamentos Hoje</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon">📆</div>
+            <div id="dash-upcoming" class="dash-stat-value">0</div>
+            <div class="dash-stat-label">Próximos Agendamentos</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon">👥</div>
+            <div id="dash-clients" class="dash-stat-value">0</div>
+            <div class="dash-stat-label">Total de Clientes</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon">⭐</div>
+            <div id="dash-rating" class="dash-stat-value">0</div>
+            <div class="dash-stat-label">Avaliação Média</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon">💰</div>
+            <div id="dash-revenue" class="dash-stat-value">R$ 0</div>
+            <div class="dash-stat-label">Faturamento Total</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-icon">📈</div>
+            <div id="dash-month-revenue" class="dash-stat-value">R$ 0</div>
+            <div class="dash-stat-label">Faturamento do Mês</div>
+          </div>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="dash-stat-card">
+            <h3 style="margin-bottom:12px;font-family:var(--font-display)">Serviços Mais Agendados</h3>
+            <div id="dash-top-services"></div>
+          </div>
+          <div class="dash-stat-card">
+            <h3 style="margin-bottom:12px;font-family:var(--font-display)">Agendamentos de Hoje</h3>
+            <div id="dash-today-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appointments -->
+      <div id="admin-appointments" class="admin-panel">
+        <div class="admin-panel-header">
+          <h2 class="admin-panel-title">Agendamentos</h2>
+        </div>
+        <div class="search-bar">
+          <input id="filter-date" class="search-input" type="date" placeholder="Filtrar por data" onchange="filterAppointments()">
+          <select id="filter-service" class="search-input" onchange="filterAppointments()" style="max-width:200px">
+            <option value="">Todos os serviços</option>
+          </select>
+          <input id="filter-search" class="search-input" type="text" placeholder="Pesquisar cliente..." onkeyup="filterAppointments()">
+        </div>
+        <div class="table-container table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr><th>Data</th><th>Hora</th><th>Cliente</th><th>Serviço</th><th>Status</th><th>Preço</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="admin-appointments-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Services -->
+      <div id="admin-services" class="admin-panel">
+        <div class="admin-panel-header">
+          <h2 class="admin-panel-title">Serviços</h2>
+          <button class="btn btn-primary" onclick="openAddService()">+ Adicionar Serviço</button>
+        </div>
+        <div class="table-container table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr><th>Nome</th><th>Preço</th><th>Duração</th><th>Ativo</th><th>Foto</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="admin-services-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Clients -->
+      <div id="admin-clients" class="admin-panel">
+        <div class="admin-panel-header">
+          <h2 class="admin-panel-title">Clientes</h2>
+        </div>
+        <div class="search-bar">
+          <input id="client-search" class="search-input" type="text" placeholder="Pesquisar clientes..." onkeyup="searchClients()">
+        </div>
+        <div class="table-container table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Status</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="admin-clients-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Reviews -->
+      <div id="admin-reviews" class="admin-panel">
+        <div class="admin-panel-header">
+          <h2 class="admin-panel-title">Avaliações</h2>
+        </div>
+        <div class="table-container table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr><th>Cliente</th><th>Nota</th><th>Comentário</th><th>Visível</th><th>Resposta</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="admin-reviews-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Gallery -->
+      <div id="admin-gallery" class="admin-panel">
+        <div class="admin-panel-header">
+          <h2 class="admin-panel-title">Galeria</h2>
+          <button class="btn btn-primary" onclick="openAddPhoto()">+ Adicionar Foto</button>
+        </div>
+        <div id="admin-gallery-list"></div>
+      </div>
+
+      <!-- Hours -->
+      <div id="admin-hours" class="admin-panel">
+        <div class="admin-panel-header">
+          <h2 class="admin-panel-title">Horários de Funcionamento</h2>
+        </div>
+        <div id="admin-hours-form"></div>
+      </div>
+
+      <!-- Settings -->
+      <div id="admin-settings" class="admin-panel">
+        <div class="admin-panel-header">
+          <h2 class="admin-panel-title">Configurações</h2>
+        </div>
+        <div class="profile-card" style="max-width:100%">
+          <div class="form-group">
+            <label class="form-label">Logo</label>
+            <input id="set-logo" class="form-input" type="file" accept="image/*">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nome da Barbearia</label>
+            <input id="set-name" class="form-input" type="text">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descrição</label>
+            <textarea id="set-desc" class="form-input" rows="3"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Telefone</label>
+              <input id="set-phone" class="form-input" type="text">
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp (apenas números com DDI)</label>
+              <input id="set-whatsapp" class="form-input" type="text">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Instagram (URL)</label>
+            <input id="set-instagram" class="form-input" type="url">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Endereço</label>
+            <input id="set-address" class="form-input" type="text">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Título Principal</label>
+              <input id="set-hero-title" class="form-input" type="text">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Subtítulo Principal</label>
+              <input id="set-hero-subtitle" class="form-input" type="text">
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()">Salvar Configurações</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ==================== MODALS ==================== -->
+
+<!-- Auth Modal -->
+<div id="auth-modal" class="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuthModal()">✕</button>
+    <h2 id="auth-modal-title" class="modal-title">Entrar</h2>
+    <p class="modal-subtitle">Acesse sua conta para agendar</p>
+    
+    <!-- Login -->
+    <form id="auth-login-form" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label class="form-label">E-mail</label>
+        <input id="login-email" class="form-input" type="email" required placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha</label>
+        <input id="login-password" class="form-input" type="password" required placeholder="••••••">
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg" style="width:100%">Entrar</button>
+      <div class="form-divider"><span>ou</span></div>
+      <p style="text-align:center;font-size:0.9rem;color:var(--gray)">
+        <a href="#" onclick="switchAuthForm('register');return false" style="color:var(--gold)">Criar nova conta</a> · 
+        <a href="#" onclick="switchAuthForm('recover');return false" style="color:var(--gold)">Esqueci a senha</a>
+      </p>
+    </form>
+    
+    <!-- Register -->
+    <form id="auth-register-form" style="display:none" onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label class="form-label">Nome completo</label>
+        <input id="register-name" class="form-input" type="text" required placeholder="Seu nome">
+      </div>
+      <div class="form-group">
+        <label class="form-label">E-mail</label>
+        <input id="register-email" class="form-input" type="email" required placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Telefone / WhatsApp</label>
+        <input id="register-phone" class="form-input" type="tel" placeholder="(00) 00000-0000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha</label>
+        <input id="register-password" class="form-input" type="password" required placeholder="Mínimo 6 caracteres">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirmar Senha</label>
+        <input id="register-confirm" class="form-input" type="password" required placeholder="Repita a senha">
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg" style="width:100%">Criar Conta</button>
+      <div class="form-divider"><span>ou</span></div>
+      <p style="text-align:center;font-size:0.9rem;color:var(--gray)">
+        <a href="#" onclick="switchAuthForm('login');return false" style="color:var(--gold)">Já tenho conta</a>
+      </p>
+    </form>
+    
+    <!-- Recover -->
+    <form id="auth-recover-form" style="display:none" onsubmit="event.preventDefault();showToast('Funcionalidade em desenvolvimento','info')">
+      <div class="form-group">
+        <label class="form-label">E-mail cadastrado</label>
+        <input class="form-input" type="email" required placeholder="seu@email.com">
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg" style="width:100%">Recuperar Senha</button>
+      <div class="form-divider"><span>ou</span></div>
+      <p style="text-align:center;font-size:0.9rem;color:var(--gray)">
+        <a href="#" onclick="switchAuthForm('login');return false" style="color:var(--gold)">Voltar ao login</a>
+      </p>
+    </form>
+  </div>
+</div>
+
+<!-- Review Modal -->
+<div id="review-modal" class="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')">✕</button>
+    <h2 class="modal-title">Avaliar Atendimento</h2>
+    <input type="hidden" id="review-appointment-id">
+    <input type="hidden" id="review-rating-value" value="0">
+    
+    <div class="form-group" style="text-align:center">
+      <label class="form-label" style="margin-bottom:12px">Sua nota</label>
+      <div id="review-star-selector" class="star-rating" style="justify-content:center">
+        <span class="star" onclick="setReviewRating(1)">★</span>
+        <span class="star" onclick="setReviewRating(2)">★</span>
+        <span class="star" onclick="setReviewRating(3)">★</span>
+        <span class="star" onclick="setReviewRating(4)">★</span>
+        <span class="star" onclick="setReviewRating(5)">★</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Comentário (opcional)</label>
+      <textarea id="review-comment" class="form-input" rows="4" placeholder="Como foi sua experiência?"></textarea>
+    </div>
+    <button class="btn btn-primary btn-lg" style="width:100%" onclick="submitReview()">Enviar Avaliação</button>
+  </div>
+</div>
+
+<!-- Service Form Modal -->
+<div id="service-form-modal" class="modal-overlay">
+  <div class="modal" style="max-width:550px">
+    <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')">✕</button>
+    <h2 id="service-form-title" class="modal-title">Adicionar Serviço</h2>
+    <form id="service-form">
+      <input type="hidden" id="service-id">
+      <div class="form-group">
+        <label class="form-label">Nome</label>
+        <input id="svc-name" name="name" class="form-input" type="text" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descrição</label>
+        <textarea id="svc-desc" name="description" class="form-input" rows="3"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Duração (minutos)</label>
+          <input id="svc-duration" name="duration" class="form-input" type="number" value="30" min="5">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Preço (R$)</label>
+          <input id="svc-price" name="price" class="form-input" type="number" value="0" min="0" step="0.01">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Foto</label>
+        <input id="svc-image" name="image" class="form-input" type="file" accept="image/*">
+        <img id="svc-image-preview" class="image-preview" alt="Preview">
+      </div>
+      <input type="hidden" id="svc-active" name="is_active" value="1">
+      <button type="button" class="btn btn-primary btn-lg" style="width:100%" onclick="saveService()">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Gallery Form Modal -->
+<div id="gallery-form-modal" class="modal-overlay">
+  <div class="modal" style="max-width:550px">
+    <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')">✕</button>
+    <h2 id="gallery-form-title" class="modal-title">Adicionar Foto</h2>
+    <form id="gallery-form">
+      <input type="hidden" id="gallery-id">
+      <div class="form-group">
+        <div class="dropzone" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleGalleryDrop(event)" onclick="document.getElementById('gallery-image').click()">
+          <div class="dropzone-icon">📁</div>
+          <div class="dropzone-text">Arraste uma imagem aqui ou clique para selecionar</div>
+          <div class="dropzone-hint">JPG, PNG ou WebP · Máximo 5MB</div>
+        </div>
+        <input id="gallery-image" name="image" type="file" accept="image/*" style="display:none">
+        <img id="gallery-image-preview" class="image-preview" alt="Preview">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Título (opcional)</label>
+        <input id="gallery-title" name="title" class="form-input" type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descrição (opcional)</label>
+        <textarea id="gallery-desc" name="description" class="form-input" rows="2"></textarea>
+      </div>
+      <input type="hidden" id="gallery-featured" name="is_featured" value="0">
+      <button type="button" class="btn btn-primary btn-lg" style="width:100%" onclick="saveGalleryPhoto()">Publicar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Client History Modal -->
+<div id="client-history-modal" class="modal-overlay">
+  <div class="modal" style="max-width:600px">
+    <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')">✕</button>
+    <h2 class="modal-title">Histórico do Cliente</h2>
+    <div id="client-history-list"></div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img src="" alt="">
+  <div class="lightbox-info">
+    <div class="lightbox-title"></div>
+    <div class="lightbox-desc" style="color:var(--gray);font-size:0.9rem"></div>
+  </div>
+</div>
+
+<!-- WhatsApp Float -->
+<a id="whatsapp-float" class="whatsapp-float" href="https://wa.me/5599981226993" target="_blank" title="Fale conosco no WhatsApp">💬</a>
+
+<!-- User dropdown toggle -->
+<script>
+document.addEventListener('click', e => {
+  const dd = document.getElementById('user-dropdown');
+  if (dd && !e.target.closest('#user-menu')) dd.classList.remove('show');
+});
+</script>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
